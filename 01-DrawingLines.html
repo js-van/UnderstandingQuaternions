@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js - Drawing Lines</title>
+    <style>
+        #info {
+            color:white;
+            font-family: "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+            font-size:5em;
+            position:absolute;
+            top:10px;
+            width:100%;
+            text-align:center;
+            z-index:100;
+            display:block;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">Line Rendering</div>
+
+    <script src="js/three.js-r88/build/three.js"></script>
+    <script src="js/three.js-r88/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500 );
+        camera.position.set(0, 0, 100);
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        var cameraController = new THREE.OrbitControls(camera);
+
+        var scene = new THREE.Scene();
+
+        var material = new THREE.LineBasicMaterial({color: 0x00ff00});
+
+        var geometry = new THREE.Geometry();
+
+        geometry.vertices.push(new THREE.Vector3(-10,0,0));
+        geometry.vertices.push(new THREE.Vector3(0,10,0));
+        geometry.vertices.push(new THREE.Vector3(10,0,0));
+
+        var line = new THREE.Line(geometry, material);
+
+        scene.add(line);
+
+        var fontLoader = new THREE.FontLoader();
+        fontLoader.load('js/three.js-r88/examples/fonts/helvetiker_regular.typeface.json', function( font )
+        {
+            var text3d = new THREE.TextGeometry("Hello World!", {
+                font: font,
+                size: 5,
+                height: 5,
+                curveSegments: 12,
+                bevelEnabled: false,
+                bevelThickness: 1,
+                bevelSize: 2,
+                bevelSegments: 5
+            });
+
+            var textMesh = new THREE.Mesh(text3d, material);
+
+            scene.add(textMesh);
+        });
+
+        function animate()
+        {
+            requestAnimationFrame(animate);
+
+            cameraController.update();
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+    </script>
+</body>
+</html>

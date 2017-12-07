@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cartesian Plane</title>
+    <script src="js/MathBox/build/mathbox-bundle.js"></script>
+    <link rel="stylesheet" href="js/MathBox/build/mathbox.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+</head>
+<body>
+    <script>
+
+        // Define VDOM handler to format 'latex' into an HTML span
+        var latex = MathBox.DOM.createClass({
+            render: function (el) {
+                this.props.innerHTML = katex.renderToString(this.children);
+                return el('span', this.props);
+            }
+        });
+
+        mathbox = mathBox({
+            plugins: ['core', 'controls', 'cursor'],
+            controls: {
+                klass: THREE.OrbitControls
+            },
+        });
+        three = mathbox.three;
+
+        three.renderer.setClearColor(new THREE.Color('#ffffff'), 1.0);
+
+        mathbox.set({ scale: 500, focus: 1 });
+
+        var view = mathbox
+            .camera({
+                proxy: true,
+                position: [0, 0, 2],
+            })
+            .cartesian({
+                range: [[-1.25, 1.25], [-1.25, 1.25]],
+                scale: [1, 1, 1],
+            });
+
+        var grid = view.grid({
+            axes:[1,2],
+            color:"#f5f5f5",
+            depth:1,
+        });
+
+        var xaxis = view.axis({
+            axis: 1,
+            color: '#c80000',
+            width: 10,
+        });
+        var yaxis = view.axis({
+            axis: 2,
+            color: '#00c800',
+            width: 10,
+        });
+
+        var circle = view.interval({
+            range:[-Math.PI,Math.PI],
+            expr: function(emit,theta,i,t)
+            {
+                R = 1;
+                x = Math.cos(theta) * R;
+                y = Math.sin(theta) * R;
+                emit(x,y);
+            },
+            width:90,
+            channels: 2,
+        })
+        .line({
+            width:10,
+            color: '#000',
+        });
+
+        view.interval({
+            range:[0,2*Math.PI],
+            expr: function(emit,theta,i,t)
+            {
+                R = 1;
+                x = Math.cos(i/2 * Math.PI) * R;
+                y = Math.sin(i/2 * Math.PI) * R;
+                emit(x,y);
+            },
+            width:4,
+            channels:2,
+        })
+        .point({
+            size:50,
+            color:'#000',
+            zTest:false,
+        })
+        .point({
+            size:40,
+            color:'#fff',
+            zTest:false,
+        })
+        .html({
+            width:  4,
+            expr: function (emit, el, i, j, k, l, t) {
+                // Emit latex
+                var color = ['#f00','#0f0'][i%2];
+                var text =["1", "1", "-1", "-1"][i];
+                emit(el(latex, {style: {color: color}}, text ));
+            },
+        })
+        .dom({
+            snap: false,
+            offset: [30, 30],
+            depth: 0,
+            zoom: 1,
+            outline: 2,
+            size: 30,
+        });
+
+
+    </script>
+</body>
+</html>
