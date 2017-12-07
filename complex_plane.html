@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cartesian Plane</title>
+    <title>Complex Plane</title>
     <script src="js/MathBox/build/mathbox-bundle.js"></script>
     <link rel="stylesheet" href="js/MathBox/build/mathbox.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
@@ -117,7 +117,7 @@
             expr: function (emit, el, i, j, k, l, t) {
                 // Emit latex
                 var color = ['#f00','#0f0'][i%2];
-                var text =["1", "1", "-1", "-1"][i];
+                var text =["1", "i", "-1", "-i"][i];
                 emit(el(latex, {style: {color: color}}, text ));
             },
         })
@@ -140,7 +140,7 @@
             expr: function (emit, el, i, j, k, l, t) {
                 // Emit latex
                 var color = ['#f00','#0f0'][i];
-                var text =["\\mathbf{X}", "\\mathbf{Y}"][i];
+                var text =["\\mathbb{R}", "\\mathbb{I}"][i];
                 emit(el(latex, {style: {color: color}}, text ));
             },
         })
@@ -152,7 +152,6 @@
             outline: 2,
             size: 30,
         });
-
 
 
     </script>
